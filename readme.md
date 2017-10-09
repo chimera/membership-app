@@ -4,21 +4,24 @@
 
 This application is a simple Node.js application that wraps the Stripe API to allow managing Stripe customers and adding extra `metadata` to their account to store information like interests, signoffs, checkoffs, etc.
 
-- List all members
-  - Show name, phone, email, rfid, subscriptions
-  - Sort by `name`
-  - Search by `name`, `email`
-  - Filter by `plan`, `signoff`, `interest`
-- Member detail
-  - Contact info
-  - Transactions
-  - Subscriptions
-  - Interests
-  - Signoffs
-- Emailing members (individual or bulk)
-  - Email button on detail page
-  - Email all button on list page
-  - Shows form with list of customers with ability to add/remove more if needed
+- **List all members**
+  - [x] Show list of customers with basic, subscriptions
+  - [ ] Searching by `name`, `email`
+  - [ ] Sorting columns
+  - [ ] Filter by `plan`, `signoff`, `interest`, etc...
+- **Member detail**
+  - [x] Contact info
+  - [x] Subscriptions
+  - [x] RFIDs
+  - [ ] Transactions
+  - [ ] Interests
+  - [ ] Signoffs
+- **Emailing members** (individual or bulk)
+  - [x] Email button on detail page
+  - [x] Email all button on list page
+  - [ ] Hook up email functionality to provider
+  - [ ] Allow email a subset of users
+  - [ ] Shows form with list of customers with ability to add/remove more if needed
 
 
 ## Setup
