@@ -1,0 +1,30 @@
+extends ../layout.pug
+
+block title
+  | Edit
+  = ' '
+  = customer.description || customer.email
+
+block content
+
+  h1 Edit #{customer.description || customer.email} 
+
+  form.mt-5(action=`/customers/${customer.id}` method='post')
+    .form-group
+      label Name
+      input.form-control(name='description' type='text' placeholder='Customer name' value=customer.description)
+    .form-group
+      label Email
+      input.form-control(name='email' type='text' placeholder='Customer email' value=customer.email)
+    .form-group
+      label Phone
+      input.form-control(name='phone' type='text' placeholder='Phone number' value=customer.metadata.phone)
+    .form-group
+      label RFID Numbers
+      input.form-control(name='rfids' type='text' placeholder='RFID numbers' value=customer.metadata.rfids)
+      p
+        small
+          em.text-muted Comma separated list of RFID numbers.
+    p.mt-5
+      button.btn.btn-lg.btn-primary(type='submit') Update Customer
+      a.ml-5(href=`/customers/${customer.id}`) Cancel updating

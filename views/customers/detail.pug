@@ -1,0 +1,92 @@
+extends ../layout.pug
+
+block title
+  = customer.description
+
+block content
+  - var baseUrl = `https://dashboard.stripe.com/${customer.livemode ? '' : 'test/'}`
+  .float-lg-right.mb-5
+    a.btn.btn-primary(href=`/messages/new?emails=${customer.email}`)
+      i.fa.fa-envelope.mr-3
+      | Message
+    a.btn.btn-primary.mx-3(href=`${baseUrl}customers/${customer.id}` target='_blank')
+      i.fa.fa-cc-stripe.mr-3
+      | View on Stripe
+    a.btn.btn-primary(href=`/customers/${customer.id}/edit`)
+      i.fa.fa-pencil.mr-3
+      | Edit
+
+  p.mb-5
+    a(href='/customers') ⃪ All customers
+  
+  .clearfix
+  
+  .float-md-right.my-5.my-md-0.rounded.px-4.py-3.text-center.text-white(class=`bg-${customer.account_balance > 0 ? 'danger' : 'success'}`)
+    div
+      small Account Balance
+    .display-3
+      | $
+      = ' '
+      = customer.account_balance
+
+  if !customer.livemode
+    p
+      small.badge.badge-warning TEST MODE
+    
+  h1
+    = customer.description
+
+  if customer.delinquent
+    .alert.alert-danger Customer is delinquent on their payments. See more by visiting Stripe.
+
+  h5.mt-5 Contact Info
+  nav.my-4
+    if customer.metadata.phone
+      a.mr-4(href=`tel:+1${customer.metadata.phone}`)
+        i.fa.fa-phone.mr-3
+        = customer.metadata.phone
+    if customer.email
+      a(href=`/messages/new?${customer.email}`)
+        i.fa.fa-envelope.mr-3
+        = customer.email
+  
+  h5.mt-5
+    span.mr-3 RFID Numbers:
+    if customer.metadata.rfids
+      for rfid in customer.metadata.rfids.split(',')
+        span.badge.badge-secondary.mr-2= rfid
+    else
+     small.text-muted No RFIDs yet...
+
+  h5.mt-5.mb-4
+    | Subscriptions
+  if customer.subscriptions && customer.subscriptions.data.length
+    table.table
+      thead
+        tr
+          th Plan
+          th Price
+          th Status
+          th Created
+      tbody
+        for sub in customer.subscriptions.data
+          tr
+            td
+              a(href=`${baseUrl}subscriptions/${sub.id}` target='_blank')= sub.plan.name
+            td
+              | $
+              = sub.plan.amount / 100
+            td
+              if sub.canceled_at
+                small.text-danger
+                  | Cancelled on
+                  = ' '
+                  = moment.unix(sub.canceled_at).format('MMMM Q, YYYY')
+              else
+                small.text-info
+                  | Next invoice:
+                  = ' '
+                  = moment.unix(sub.current_period_end).format('MMMM Q, YYYY')
+            td= moment.unix(sub.created).format('MMMM Q, YYYY')
+
+  pre.mt-5= JSON.stringify(customer, null, 2)

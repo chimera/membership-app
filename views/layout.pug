@@ -1,0 +1,43 @@
+doctype html
+html(lang='en')
+  head
+    title
+      block title
+      = ' '
+      | 🦁 Chimera Member Manager
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    meta(http-equiv='x-ua-compatible' content='ie=edge')
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' rel='stylesheet' type='text/css')
+    link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css')
+  body
+
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-5
+      .container
+        a.navbar-brand(href='/')
+          strong Chimera
+        .navbar-nav.mr-auto
+          a.nav-item.nav-link(href='/') Customers
+          a.nav-item.nav-link(href='/messages/new') Send Message
+
+    .container
+      for type in ['success', 'info', 'warning', 'danger']
+        if messages[type]
+          .alert(class=`alert-${type}`).mb-3
+            if type === 'success'
+              i.fa.fa-check.pr-1
+            if type === 'danger'
+              i.fa.fa-times.pr-1
+            if type === 'warning'
+              i.fa.fa-exclamation-triangle.pr-1
+            if type === 'info'
+              i.fa.fa-info-circle.pr-1
+            = messages[type]
+            if messages.link
+              | &nbsp;
+              a(href=messages.link[1])= messages.link[0]
+
+      block content
+
+    script.
+      console.log('foo')

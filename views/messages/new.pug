@@ -1,0 +1,21 @@
+extends ../layout.pug
+
+block title
+  | New Message
+
+block content
+  h1 New Message
+  form.mt-5(action='/messages' method='post')
+    .form-group
+      textarea.form-control(name='emails' rows=4 placeholder='Recipients...')= emails.join(', ')
+      p
+        small
+          em.text-muted Comma separated list of emails to send the message to.
+    .form-group
+      input.form-control.form-control-lg(name='subject' type='text' placeholder='Email subject...')
+    .form-group
+      textarea.form-control(name='message' placeholder='Email message...' rows=12)
+    p.mt-5
+      button.btn.btn-lg.btn-primary(type='submit') Send Message
+      a.ml-5(href='/') Don't send message
+

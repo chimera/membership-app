@@ -1,0 +1,26 @@
+{
+  "name": "chimera-membership",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec npm start",
+    "start": "node ./server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "config": "1.26.2",
+    "express": "4.16.1",
+    "express-async-wrapper": "0.1.0",
+    "express-flash": "0.0.2",
+    "express-session": "1.15.6",
+    "moment": "2.18.1",
+    "pug": "2.0.0-rc.4",
+    "stripe": "5.1.0",
+    "winston": "2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "1.12.1",
+    "prettier": "1.7.4"
+  }
+}
