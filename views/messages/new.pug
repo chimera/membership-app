@@ -7,14 +7,17 @@ block content
   h1 New Message
   form.mt-5(action='/messages' method='post')
     .form-group
-      textarea.form-control(name='emails' rows=4 placeholder='Recipients...')= emails.join(', ')
-      p
+      label(for='field-emails') Emails
+      textarea#field-emails.form-control(name='emails' rows=4 placeholder='Recipients...')= emails.join(', ')
+      p.text-right
         small
           em.text-muted Comma separated list of emails to send the message to.
     .form-group
-      input.form-control.form-control-lg(name='subject' type='text' placeholder='Email subject...'  autocapitalize='word' required)
+      label(for='field-subject') Subject
+      input#field-subject.form-control.form-control-lg(name='subject' type='text' placeholder='Email subject...'  autocapitalize='word' required)
     .form-group
-      textarea.form-control(name='body' placeholder='Email message...' rows=12 required)
+      label(for='field-message') Message
+      textarea#field-message.form-control(name='body' placeholder='Email message...' rows=12 required)
     p.mt-5
       button.btn.btn-lg.btn-primary(type='submit') Send Message
       a.ml-5(href='/') Don't send message

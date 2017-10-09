@@ -7,7 +7,7 @@ block content
   p.float-right
     a.btn.btn-primary(href=`/messages/new?emails=${customers.map(c => c.email).join(',')}`) 
       i.fa.fa-envelope.mr-3
-      | Email All
+      | Message #{customers.length} Customer#{customers.length ? 's' : ''}
   h1 Customers
   p There are currently #{customers.length} customers.
   if customers && customers.length
