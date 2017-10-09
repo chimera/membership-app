@@ -17,9 +17,11 @@ This application is a simple Node.js application that wraps the Stripe API to al
   - [x] RFIDs
   - [x] Interests
   - [x] Signoffs
+  - [ ] Address
   - [ ] Emergency contacts
   - [ ] Active Credit Card (type, last 4, exp date)
   - [ ] Transactions (later...)
+  - [ ] Invoices (later...)
 - **Emailing members** (individual or bulk)
   - [x] Email button on detail page
   - [x] Email all button on list page
@@ -30,7 +32,8 @@ This application is a simple Node.js application that wraps the Stripe API to al
 - **Checkins**
   - [ ] API to add checkins (from Particle cloud...)
   - [ ] List checkins on customer page
-  - [ ] Store checkins in current "subscription" billing period
+  - [ ] Store checkins in `metadata` for current "invoice" for billing period (via `period_end`?)
+  - [ ] Allow manually adding/removing checkins (later...)
 
 
 ## Setup

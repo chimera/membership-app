@@ -45,31 +45,61 @@ block content
 
   h1.display-4
     = customer.description
-
-  .mt-3
-    strong.mr-3 Contact Info
-    if customer.metadata.phone
-      a.mr-4(href=`tel:+1${customer.metadata.phone}`)
-        i.fa.fa-phone.mr-3
-        = customer.metadata.phone
-    if customer.email
-      a(href=`/messages/new?emails=${customer.email}`)
-        i.fa.fa-envelope.mr-3
-        = customer.email
   
-  .mt-3
-    strong.mr-3 RFID Numbers:
-    if customer.metadata.rfids
-      each rfid in customer.metadata.rfids.split(',')
-        span.badge.badge-info.mr-2= rfid
-    else
-     small.text-muted No RFIDs yet...
 
-  .mt-3
-    strong.mr-3 Interests
-    if customer.metadata.interests
-      each interest in customer.metadata.interests.split(',')
-        span.badge.badge-success.mr-2= interest
+  table.table.table-sm.table-hover.table-responsive.my-4(style="width: auto")
+    tbody
+      tr
+        th.pr-5 Contact Info:
+        td
+          if customer.metadata.phone
+            a.mr-4(href=`tel:+1${customer.metadata.phone}`)
+              i.fa.fa-phone.mr-2
+              = customer.metadata.phone
+          if customer.email
+            a(href=`/messages/new?emails=${customer.email}`)
+              i.fa.fa-envelope-o.mr-2
+              = customer.email
+
+      tr
+        th.pr-5 Credit Card:
+        td
+          if customer.sources && customer.sources.data.length
+            - var card = customer.sources.data[0]
+              if card.brand === 'Visa'
+                i.fa.fa-cc-visa.mr-3
+              else if card.brand === 'American Express'
+                i.fa.fa-cc-vamex.mr-3
+              else if card.brand === 'MasterCard'
+                i.fa.fa-cc-vmastercard.mr-3
+              else if card.brand === 'Discover'
+                i.fa.fa-cc-vdiscover.mr-3
+              else
+                i.fa.fa-credit-card.mr-3
+              small.mr-3
+                span.text-muted **** **** **** 
+                strong= card.last4
+              small.text-muted exp: #{card.exp_month}/#{card.exp_year}
+          else
+            small.text-muted No credit card on file...
+        
+      tr
+        th.pr-5 RFID Numbers:
+        td
+          if customer.metadata.rfids
+            each rfid in customer.metadata.rfids.split(',')
+              span.badge.badge-info.mr-2= rfid
+          else
+            small.text-muted No RFIDs yet...
+
+      tr
+        th.pr-5 Interests:
+        td
+          if customer.metadata.interests
+            each interest in customer.metadata.interests.split(',')
+              span.badge.badge-success.mr-2= interest
+          else
+            small.text-muted No interests yet...
 
   hr.my-5.clearfix
 
