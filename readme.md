@@ -46,14 +46,16 @@ We store `metadata` on the customer object in Stripe so we can keep track of ext
 Metadata structure on Stripe:
 ```js
 {
+  phone: '7075551234',
+  rfid: '123456789,0000123123',
+  orientation: '2017-01-09,John Smith',
+  signoffs: 'Laser Cutter,Bob Guy,2017-02-11\n3D Printer,Alex Something,2016-12-23',
+
+  // Future fields?
+  // emergencyContacts: 'John Smith,7075558898\nJane Doe,4152234433',
   // bio: 'Im a dude who likes stuff',
   // interests: '3D Printing,Laser Cutting,Jewelry', // split/trim
   // avatar: 'http://...url.com',
-  phone: '7075696901',
-  rfid: '123456789,0000123123',
-  orientation: '2017-01-09,Kasey Kieta',
-  // emergencyContacts: 'John Smith,7075558898\nJane Doe,4152234433',
-  signoffs: 'Laser Cutter,Tiprin,2017-02-11\n3D Printer,Dana Woodman,2016-12-23',
-  password: 'asdf32hgdi2hoidoisfnwoierh23',
+  // password: 'asdf32hgdi2hoidoisfnwoierh23',
 }
 ```
