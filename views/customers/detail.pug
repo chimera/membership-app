@@ -4,12 +4,15 @@ block title
   = customer.description
 
 block content
+
   - var baseUrl = `https://dashboard.stripe.com/${customer.livemode ? '' : 'test/'}`
+  - var stripeUrl = `${baseUrl}customers/${customer.id}`
+
   .float-lg-right.mb-5
     a.btn.btn-primary(href=`/messages/new?emails=${customer.email}`)
       i.fa.fa-envelope.mr-3
       | Message
-    a.btn.btn-primary.mx-3(href=`${baseUrl}customers/${customer.id}` target='_blank')
+    a.btn.btn-primary.mx-3(href=stripeUrl target='_blank')
       i.fa.fa-cc-stripe.mr-3
       | View on Stripe
     a.btn.btn-primary(href=`/customers/${customer.id}/edit`)
@@ -19,8 +22,19 @@ block content
   p.mb-5
     a(href='/customers') ⃪ All customers
   
-  .clearfix
+
+  if customer.delinquent
+    .alert.alert-danger
+      i.fa.fa-warning.mr-3
+      strong Customer is delinquent on their payments.
+      = ' '
+      | See more by 
+      a(href=stripeUrl target='_blank') viewing their account on Stripe
   
+  if !customer.livemode
+    p
+      small.badge.badge-warning TEST MODE
+
   .float-md-right.my-5.my-md-0.rounded.px-4.py-3.text-center.text-white(class=`bg-${customer.account_balance > 0 ? 'danger' : 'success'}`)
     div
       small Account Balance
@@ -29,39 +43,39 @@ block content
       = ' '
       = customer.account_balance
 
-  if !customer.livemode
-    p
-      small.badge.badge-warning TEST MODE
-    
-  h1
+  h1.display-4
     = customer.description
 
-  if customer.delinquent
-    .alert.alert-danger Customer is delinquent on their payments. See more by visiting Stripe.
-
-  h5.mt-5 Contact Info
-  nav.my-4
+  .mt-3
+    strong.mr-3 Contact Info
     if customer.metadata.phone
       a.mr-4(href=`tel:+1${customer.metadata.phone}`)
         i.fa.fa-phone.mr-3
         = customer.metadata.phone
     if customer.email
-      a(href=`/messages/new?${customer.email}`)
+      a(href=`/messages/new?emails=${customer.email}`)
         i.fa.fa-envelope.mr-3
         = customer.email
   
-  h5.mt-5
-    span.mr-3 RFID Numbers:
+  .mt-3
+    strong.mr-3 RFID Numbers:
     if customer.metadata.rfids
-      for rfid in customer.metadata.rfids.split(',')
-        span.badge.badge-secondary.mr-2= rfid
+      each rfid in customer.metadata.rfids.split(',')
+        span.badge.badge-info.mr-2= rfid
     else
      small.text-muted No RFIDs yet...
 
-  h5.mt-5.mb-4
-    | Subscriptions
+  .mt-3
+    strong.mr-3 Interests
+    if customer.metadata.interests
+      each interest in customer.metadata.interests.split(',')
+        span.badge.badge-success.mr-2= interest
+
+  hr.my-5.clearfix
+
+  h5.mb-4 Subscriptions
   if customer.subscriptions && customer.subscriptions.data.length
-    table.table
+    table.table.table-sm.table-hover.table-responsive
       thead
         tr
           th Plan
@@ -69,13 +83,13 @@ block content
           th Status
           th Created
       tbody
-        for sub in customer.subscriptions.data
+        each sub in customer.subscriptions.data
+          - var singular = sub.plan.interval_count === 1
           tr
             td
-              a(href=`${baseUrl}subscriptions/${sub.id}` target='_blank')= sub.plan.name
-            td
-              | $
-              = sub.plan.amount / 100
+              strong
+                a(href=`${baseUrl}subscriptions/${sub.id}` target='_blank')= sub.plan.name
+            td $#{sub.plan.amount / 100} every #{singular ? '' : sub.plan.interval_count} #{sub.plan.interval}#{singular ? '' : 's'}
             td
               if sub.canceled_at
                 small.text-danger
@@ -88,5 +102,27 @@ block content
                   = ' '
                   = moment.unix(sub.current_period_end).format('MMMM Q, YYYY')
             td= moment.unix(sub.created).format('MMMM Q, YYYY')
+
+  hr.my-5
+
+  h5.mb-4 Signoffs
+  if customer.metadata.signoffs
+    table.table.table-sm.table-hover.table-responsive
+      thead
+        tr
+          th Equipment/Area
+          th Instructor
+          th Date
+      tbody
+        each signoff in customer.metadata.signoffs.split('\\n')
+          - var fields = signoff.split(',')
+          tr
+            td
+              strong= fields[0]
+            td= fields[1]
+            td
+              datetime= moment(fields[2]).format('MMMM Q, YYYY')
+
+  hr.my-5
 
   pre.mt-5= JSON.stringify(customer, null, 2)
