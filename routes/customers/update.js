@@ -9,8 +9,10 @@ module.exports = wrap(async (req, res) => {
     description: body.description,
     email: body.email,
     metadata: {
-      phone: body.phone,
+      interests: body.interests,
       rfids: body.rfids,
+      signoffs: body.signoffs,
+      phone: body.phone,
     },
   }
 
