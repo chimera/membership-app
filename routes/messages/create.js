@@ -1,9 +1,16 @@
+const email = require('../../lib/email')
 const wrap = require('express-async-wrapper')
 
 module.exports = wrap(async (req, res) => {
-  console.log(req.body)
-  const emails = req.body.emails.split(',').map(e => e.trim())
-  console.log('EMAILS', emails)
-  req.flash('success', 'Members emailed!')
+  const { body, subject, emails } = req.body
+
+  const to = req.body.emails.split(',').map(e => e.trim())
+
+  await email({ to, subject, body })
+
+  req.flash(
+    'success',
+    `Email "${subject}" sent to ${to.length} customer${to.length ? 's' : ''}.`
+  )
   res.redirect('/')
 })
