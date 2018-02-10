@@ -36,14 +36,22 @@ npm run serve
 * They input their basic info, agree to terms/member agreement, set a password and add a credit card
     * If they are not already logged in, we log them in under this new account (eg they are Staff adding a new member)
 
-### Bookings
+### Bookings & Resources
 
-* Customers can book Resources
-    * Customer chooses Resource, date, time and for how long to create a Booking
-    * Cannot book a Resource if it is already booked for the requested date/time
-    * Staff can manage Bookings for any Customer
-* Staff can add/edit/remove Resources
-* Customer and Staff can view a Booking calendar (display in space)
+To allow members (eg `Customer`) to book equipment in the space we allow them to book a given tool (a `Resource`) for a date and time period.
+
+A booking consists of:
+
+1. The Customer associated with the booking
+2. The Resource they are booking
+3. The date/time they want to book the resource for
+4. The time range they want to book for (15 minutes to 2 hours in 15 minute increments)
+
+When creating a booking it will fail if the given resource is already booked within the given time range, with a helpful message.
+
+We show a booking calendar to members and staff with a list of the booked equipment for any day.
+
+In the initial version we won't set any limits to bookings.
 
 ### Checkins
 
@@ -79,11 +87,42 @@ npm run serve
 * Future: edit list of emails to send to
 * Future: autocomplete of all Customer emails to add more
 
+### Authentication
+
+We use Stripe to store all our login information so the login process for a Customer looks like:
+
+1. Look up the email the submitted in the login form in the Customer `customer.email` field.
+    1. If no Customers with that email was found, show an error message
+    2. If one Customer was found with that email, check to see if their password matches `customer.metadata.password` (which is encrypted)
+        1. If it matches, log them in and set a cookie
+        2. If it doesn't, let them know and prompt a password reset
+    3. If multiple Customer's were found, use the most recent one. This isn't ideal but should work 95% of the time since most recent Customer is usually the "active" one anyways. We can always remove an old customer if this is an issue.
+
+#### Forgot Password
+
+If a Customer forgets their password, they input their email address in a form and we send a temporary reset link:
+
+1. When creating the reset link, we store a `metadata.resetToken = "somerandomstring"`
+2. When they click the link they go to `/reset-password?token=somerandomstring` where they are prompted to put in a new password
+3. Once submitted, we:
+    1. Set their new password to `metadata.password`
+    2. Remove their `metadata.resetToken` field
+    3. Log them in by setting a cookie
+
 ### Day Passes
 
-* Customer and Staff can purchase a new Day Pass
-* Staff can edit a Day Pass
-* Redeem Day Pass (Staff manually, doorlock automatically)
+We allow members to buy day passes or staff to add day passes to Customers. We do this by creating a Charge with the `metadata.daypass = true`.
+
+It is redeemed by setting `metadata.redeemedAt = timestamp` where the `timestamp` is a Unix Epoch of when the day pass was redeemed.
+
+Staff can optionally choose to not charge the Customer. We do this by setting the charge to `$0.00`. Staff can also unset `redeemedAt` to make the day pass available again.
+
+We redeem a day pass when someone records a new checking for a day during their Subscription where they have already used up all their alloted days (`plan.metadata.days`), pseudo code:
+
+```
+if customer.subscription.daysUsed gte plan.days
+  daypass.redeemedAt = unix epoch timestamp
+```
 
 ### Staff Dashboard
 
@@ -108,15 +147,6 @@ We use Stripe for most of our data storage and payment processing with a few exc
 ### Plans
 
 We only allow Customers to signup on Plans that have both `metadata.public = true` and `metadata.membership = true`.
-
-### Customers
-
-A customer is a Stripe Customer. They may have a `metadata.password` which would allow them to login to our application and do the following:
-
-1. Change or cancel their subscriptions
-2. Book equipment
-3. Change basic info (email, name) - coming someday...
-4. Change their password
 
 #### Cancellations & Plan Changes
 
@@ -158,6 +188,13 @@ The exceptions to this are:
 
 ### Customer Information
 
+A customer is a Stripe Customer. They may have a `metadata.password` which would allow them to login to our application and do the following:
+
+1. Change or cancel their subscriptions
+2. Book equipment
+3. Change basic info (email, name) - coming someday...
+4. Change their password
+
 We store `metadata` on the customer object in Stripe so we can keep track of extra details we are interested in.
 
 Metadata structure on Stripe:
@@ -180,60 +217,6 @@ Metadata structure on Stripe:
   // password: 'asdf32hgdi2hoidoisfnwoierh23',
 }
 ```
-
-### Customer login
-
-We use Stripe to store all our login information so the login process for a Customer looks like:
-
-1. Look up the email the submitted in the login form in the Customer `customer.email` field.
-    1. If no Customers with that email was found, show an error message
-    2. If one Customer was found with that email, check to see if their password matches `customer.metadata.password` (which is encrypted)
-        1. If it matches, log them in and set a cookie
-        2. If it doesn't, let them know and prompt a password reset
-    3. If multiple Customer's were found, use the most recent one. This isn't ideal but should work 95% of the time since most recent Customer is usually the "active" one anyways. We can always remove an old customer if this is an issue.
-
-#### Forgot Password
-
-If a Customer forgets their password, they input their email address in a form and we send a temporary reset link:
-
-1. When creating the reset link, we store a `metadata.resetToken = "somerandomstring"`
-2. When they click the link they go to `/reset-password?token=somerandomstring` where they are prompted to put in a new password
-3. Once submitted, we:
-    1. Set their new password to `metadata.password`
-    2. Remove their `metadata.resetToken` field
-    3. Log them in by setting a cookie
-
-### Day Passes
-
-We allow Customers to buy day passes or staff to add day passes to Customers. We do this by creating a Charge with the `metadata.daypass = true`.
-
-It is redeemed by setting `metadata.redeemedAt = timestamp` where the `timestamp` is a Unix Epoch of when the day pass was redeemed.
-
-Staff can optionally choose to not charge the Customer. We do this by setting the charge to `$0.00`. Staff can also unset `redeemedAt` to make the day pass available again.
-
-We redeem a day pass when someone records a new checking for a day during their Subscription where they have already used up all their alloted days (`plan.metadata.days`), pseudo code:
-
-```
-if customer.subscription.daysUsed gte plan.days
-  daypass.redeemedAt = unix epoch timestamp
-```
-
-### Bookings & Resources
-
-To allow members to book equipment in the space we allow them to book a given tool for a date and time period.
-
-A booking consists of:
-
-1. The Customer associated with the booking
-2. The Resource they are booking
-3. The date they want to book the resource for
-4. The time range they want to book for (15 minutes to 2 hours in 15 minute increments)
-
-When creating a booking it will fail if the given resource is already booked within the given time range.
-
-We show a booking calendar to Customers and staff with a list of the booked equipment for any day.
-
-In the initial version we won't set any limits to bookings.
 
 ## Credits
 
