@@ -2,61 +2,6 @@
 
 > Membership management for Chimera Arts & Makerspace built onStripe
 
-## Features
-
-* **Customer Signup**
-    * New Customer or Staff goes to a page to choose the plan they want
-        * We only show Plans that are "public memberships"
-    * They input their basic info, agree to terms/member agreement, set a password and add a credit card
-        * If they are not already logged in, we log them in under this new account (eg they are Staff adding a new member)
-* **Bookings**
-    * Customers can book Resources
-        * Customer chooses Resource, date, time and for how long to create a Booking
-        * Cannot book a Resource if it is already booked for the requested date/time
-        * Staff can manage Bookings for any Customer
-    * Staff can add/edit/remove Resources
-    * Customer and Staff can view a Booking calendar (display in space)
-* **Checkins**
-    * The Doorlock records Checkins when Customers come into the space
-    * Staff can see Checkins for a Customer
-    * Customer can see their own Checkins
-    * Staff can add/remove a Checkin for a Customer
-    * Staff can view a Checkin calendar that shows total # of checkins for a day
-        * Clicking a day shows all Checkins for that day ordered latest at the top
-* **Subscriptions**
-    * Staff can add a Customer to a Subscription
-    * Staff can change a Customer's Plan
-    * Staff can cancel a Customer's Subscription
-    * Customer can cancel their Subscriptions
-* **Customer List**
-    * Staff can search for members by name, email
-    * Staff can filter by plan, interests, etc
-* **Customer Profile**
-    * Customer can see all their Payments/Invoices, Subscriptions, Checkins, Bookings, etc
-    * Customer can change their email, name or interests
-    * Customer can change their credit card on file
-    * Staff can manage all customer details
-* **Emailing Customers**
-    * Staff can send emails to a given member or a list of members
-    * Future: edit list of emails to send to
-    * Future: autocomplete of all Customer emails to add more
-* **Day Passes**
-    * Customer and Staff can purchase a new Day Pass
-    * Staff can edit a Day Pass
-    * Redeem Day Pass (Staff manually, doorlock automatically)
-* **Staff Dashboard**
-    * Add a new Customer
-    * View today's checkins
-    * View Customrs who are "over using"
-* **Doorlock**
-    * Scans RFID cards
-        * Lets member in if card belongs to an "active" Customer
-        * Rejects if they don't exist
-        * Show success/error message on a display by the door
-        * Records a local checking on every success
-    * Fetches "active" Customers every 5-10 minutes, updates local list
-    * Pushes Checkins every 10-30 minutes, clears local Checkins if success
-
 ## Setup
 
 ```bash
@@ -81,6 +26,80 @@ This application is hosted on Heroku and thus can be deployed with a simple `git
 ```bash
 npm run serve
 ```
+
+## Overview
+
+### Customer Signup
+
+* New Customer or Staff goes to a page to choose the plan they want
+    * We only show Plans that are "public memberships"
+* They input their basic info, agree to terms/member agreement, set a password and add a credit card
+    * If they are not already logged in, we log them in under this new account (eg they are Staff adding a new member)
+
+### Bookings
+
+* Customers can book Resources
+    * Customer chooses Resource, date, time and for how long to create a Booking
+    * Cannot book a Resource if it is already booked for the requested date/time
+    * Staff can manage Bookings for any Customer
+* Staff can add/edit/remove Resources
+* Customer and Staff can view a Booking calendar (display in space)
+
+### Checkins
+
+* The Doorlock records Checkins when Customers come into the space
+* Staff can see Checkins for a Customer
+* Customer can see their own Checkins
+* Staff can add/remove a Checkin for a Customer
+* Staff can view a Checkin calendar that shows total # of checkins for a day
+    * Clicking a day shows all Checkins for that day ordered latest at the top
+
+### Subscriptions
+
+* Staff can add a Customer to a Subscription
+* Staff can change a Customer's Plan
+* Staff can cancel a Customer's Subscription
+* Customer can cancel their Subscriptions
+
+### Customer List
+
+* Staff can search for members by name, email
+* Staff can filter by plan, interests, etc
+
+### Customer Profile
+
+* Customer can see all their Payments/Invoices, Subscriptions, Checkins, Bookings, etc
+* Customer can change their email, name or interests
+* Customer can change their credit card on file
+* Staff can manage all customer details
+
+### Emailing Customers
+
+* Staff can send emails to a given member or a list of members
+* Future: edit list of emails to send to
+* Future: autocomplete of all Customer emails to add more
+
+### Day Passes
+
+* Customer and Staff can purchase a new Day Pass
+* Staff can edit a Day Pass
+* Redeem Day Pass (Staff manually, doorlock automatically)
+
+### Staff Dashboard
+
+* Add a new Customer
+* View today's checkins
+* View Customrs who are "over using"
+
+### Doorlock
+
+* Scans RFID cards
+    * Lets member in if card belongs to an "active" Customer
+    * Rejects if they don't exist
+    * Show success/error message on a display by the door
+    * Records a local checking on every success
+* Fetches "active" Customers every 5-10 minutes, updates local list
+* Pushes Checkins every 10-30 minutes, clears local Checkins if success
 
 ## Implementation Overview
 
