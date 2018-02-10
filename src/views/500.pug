@@ -1,0 +1,16 @@
+extends ./layout.pug
+
+block title
+  | Server Error
+
+block content
+  h1.txt-xxxl.fw-1.mb-md Server Error
+  p Sorry, there appears to have been an issue on the server. Please report the below to:
+  p
+    a(href='mailto:dana@builtbybig.com') dana@builtbybig.com
+
+  h4.mt-xl.txt-lg.bb.bc-gray-lighter.pb-sm Error Message:
+  p.my-md
+    strong.mr-sm URL:
+    code.mono.gray= url
+  pre.my-md.gray= error

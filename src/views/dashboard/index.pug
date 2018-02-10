@@ -1,0 +1,51 @@
+extends ../layout.pug
+
+block title
+  | Dashboard
+
+block content
+  h1.txt-xxxl.fw-1 Dashboard
+
+  h5.gray-dark.mt-lg.mb-md.bb.bc-gray-lighter.pb-sm.upper.ls-lg.txt-md Members Exceeding Usage
+
+  table.unstyled.pl-none
+    tbody
+      tr
+        td.py-xs
+          a(href='/customers/1234') Arnold Less
+        td.pl-md 12/8 days used
+      tr
+        td.py-xs
+          a(href='/customers/1234') Chris Widden
+        td.pl-md 3/2 days used
+      tr
+        td.py-xs
+          a(href='/customers/1234') Elise VanHorn
+        td.pl-md 9/8 days used
+      tr
+        td.py-xs
+          a(href='/customers/1234') Fred Thompson
+        td.pl-md 2/2 days used
+
+  h5.gray-dark.mt-lg.mb-md.bb.bc-gray-lighter.pb-sm.upper.ls-lg.txt-md Today's Checkins
+  table.unstyled.pl-none
+    tbody
+      tr
+        td.py-xs
+          a(href='/customers/1234') Alex Smith
+        td.pl-md 3:45pm
+      tr
+        td.py-xs
+          a(href='/customers/1234') James Lorent
+        td.pl-md 2:18pm
+      tr
+        td.py-xs
+          a(href='/customers/1234') Lexi Green
+        td.pl-md 11:05am
+
+  h5.gray-dark.mt-lg.mb-md.bb.bc-gray-lighter.pb-sm.upper.ls-lg.txt-md Staff Tools
+  ul.unstyled.pl-none.my-md
+    li
+      a(href='/customers/new')
+        i.fa.fa-user-plus.mr-2
+        | Create a new customer

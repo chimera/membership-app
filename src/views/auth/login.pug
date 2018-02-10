@@ -1,0 +1,20 @@
+extends ../layout.pug
+
+block title
+  | Login
+
+block content
+  .row
+    .col-md-6.offset-md-3
+      h1 Login
+      form.mt-5(action='/auth/login' method='post')
+        .form-group
+          label(for='email') Email
+          input.form-control(type='text' name='email' placeholder='Email...' autofocus)
+        .form-group
+          .float-right
+            a(href='/auth/forgot-password' tabindex='-1') Forgot your password?
+          label(for='password') Password
+          input.form-control(type='password' name='password' placeholder='Password...')
+        p
+          button.btn.btn-primary.btn-lg(type='submit') Login

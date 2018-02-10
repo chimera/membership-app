@@ -1,0 +1,60 @@
+extends ../layout.pug
+
+block title
+  | Customers
+
+block content
+  p.float-right
+    a.btn.btn-primary(href=`/messages/new?emails=${customers.map(c => c.email).join(',')}`) 
+      i.fa.fa-envelope.mr-3
+      | Message #{customers.length} Customer#{customers.length ? 's' : ''}
+  h1 Customers
+  p There are currently #{customers.length} customers.
+
+  form(action='/customers' method='get')
+    .form-inline.my-3
+      .form-group
+        input.form-control(name='search' type='search' placeholder='Search name, email...' size=60 value=search autofocus)
+        button.btn.btn-primary.ml-2(type='submit')
+          i.fa.fa-search.mr-2
+          | Search
+
+    .row
+      .col-md-9
+        if customers && customers.length
+          table.table
+            thead
+              tr
+                th Name
+                th Contact Info
+                th Subscriptions
+            tbody
+              for customer in customers
+                tr
+                  td
+                    a(href=`/customers/${customer.id}`)
+                      if customer.description
+                        = customer.description
+                      else
+                        = customer.email
+                  td
+                    a(href=`/messages/new?emails=${customer.email}`)= customer.email
+                  td= customer.subscriptions.data.length
+        else
+          p.text-warning
+            | There are no customers matching that search.
+            a.ml-2(href='/customers') Clear search?
+      .col-md-3
+
+        .form-group
+          label.mr-3 Member?
+          select(name='member')
+            option(value='either' selected=(member === 'either')) Everyone
+            option(value='yes' selected=(member === 'yes')) Member
+            option(value='no' selected=(member === 'no')) Non-member
+        p.mt-4
+          button.btn.btn-primary.btn-block(type='submit')
+            i.fa.fa-filter.mr-2
+            | Filter
+
+  pre= JSON.stringify(customers, null, 2)

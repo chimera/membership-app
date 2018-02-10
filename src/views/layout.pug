@@ -1,0 +1,71 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    meta(http-equiv='x-ua-compatible' content='ie=edge')
+    title
+      block title
+      = ' '
+      | 🦁 Chimera Member Manager
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' type='text/css')
+    link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css')
+    link(href='//unpkg.com/euphoria/dist/euphoria.min.css' rel='stylesheet' type='text/css')
+    style.
+      .form-group label {
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      a {
+        color: #12cc81;
+      }
+      .btn-primary {
+        background: #12cc81;
+        border-color: #12cc81;
+        cursor: pointer;
+      }
+  body
+
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-5
+      .container
+        a.navbar-brand(href='/')
+          strong Chimera
+        .navbar-nav.mr-auto
+          a.nav-item.nav-link(href='/customers') Customers
+          a.nav-item.nav-link(href='/messages/new') Send Message
+        if currentUser
+          a.mr-5(href=`/customers/${currentUser.id}`)= currentUser.firstName
+          a(href='/auth/logout') Logout
+        else
+          a(href='/auth/login') Login
+
+    .container
+      for type in ['success', 'info', 'warning', 'danger', 'error']
+        if messages[type]
+          - var msg = messages[type]
+          .mb-3
+            if type === 'success'
+              .alert.alert-success
+                i.fa.fa-check.pr-1
+                = msg
+            if type === 'danger' || type === 'error'
+              .alert.alert-danger
+                i.fa.fa-times.pr-1
+                = msg
+            if type === 'warning'
+              .alert.alert-warning
+                i.fa.fa-exclamation-triangle.pr-1
+                = msg
+            if type === 'info'
+              .alert.alert-info
+                i.fa.fa-info-circle.pr-1
+                = msg
+            //- if messages.link
+            //-   | &nbsp;
+            //-   a(href=messages.link[1])= messages.link[0]
+
+      block content
+
+      pre= JSON.stringify(currentUser, null, 2)
+    script.
+      console.log('foo')

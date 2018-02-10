@@ -52,10 +52,10 @@ block content
       tr
         th.pr-5 Contact Info:
         td
-          if customer.metadata.phone
-            a.mr-4(href=`tel:+1${customer.metadata.phone}`)
+          if customer.phone
+            a.mr-4(href=`tel:+1${customer.phone}`)
               i.fa.fa-phone.mr-2
-              = customer.metadata.phone
+              = customer.phone
           if customer.email
             a(href=`/messages/new?emails=${customer.email}`)
               i.fa.fa-envelope-o.mr-2
@@ -86,8 +86,8 @@ block content
       tr
         th.pr-5 RFID Numbers:
         td
-          if customer.metadata.rfids
-            each rfid in customer.metadata.rfids.split(',')
+          if customer.rfids
+            each rfid in customer.rfids
               span.badge.badge-info.mr-2= rfid
           else
             small.text-muted No RFIDs yet...
@@ -95,63 +95,63 @@ block content
       tr
         th.pr-5 Interests:
         td
-          if customer.metadata.interests
-            each interest in customer.metadata.interests.split(',')
+          if customer.interests
+            each interest in customer.interests
               span.badge.badge-success.mr-2= interest
           else
             small.text-muted No interests yet...
 
   hr.my-5.clearfix
 
-  h5.mb-4 Subscriptions
-  if customer.subscriptions && customer.subscriptions.data.length
-    table.table.table-sm.table-hover.table-responsive
-      thead
-        tr
-          th Plan
-          th Price
-          th Status
-          th Created
-      tbody
-        each sub in customer.subscriptions.data
-          - var singular = sub.plan.interval_count === 1
-          tr
-            td
-              strong
-                a(href=`${baseUrl}subscriptions/${sub.id}` target='_blank')= sub.plan.name
-            td $#{sub.plan.amount / 100} every #{singular ? '' : sub.plan.interval_count} #{sub.plan.interval}#{singular ? '' : 's'}
-            td
-              if sub.canceled_at
-                small.text-danger
-                  | Cancelled on
-                  = ' '
-                  = moment.unix(sub.canceled_at).format('MMMM Q, YYYY')
-              else
-                small.text-info
-                  | Next invoice:
-                  = ' '
-                  = moment.unix(sub.current_period_end).format('MMMM Q, YYYY')
-            td= moment.unix(sub.created).format('MMMM Q, YYYY')
+  //- h5.mb-4 Subscriptions
+  //- if customer.subscriptions && customer.subscriptions.length
+  //-   table.table.table-sm.table-hover.table-responsive
+  //-     thead
+  //-       tr
+  //-         th Plan
+  //-         th Price
+  //-         th Status
+  //-         th Created
+  //-     tbody
+  //-       each sub in customer.subscriptions
+  //-         - var singular = sub.plan.interval_count === 1
+  //-         tr
+  //-           td
+  //-             strong
+  //-               a(href=`${baseUrl}subscriptions/${sub.id}` target='_blank')= sub.plan.name
+  //-           td $#{sub.plan.amount / 100} every #{singular ? '' : sub.plan.interval_count} #{sub.plan.interval}#{singular ? '' : 's'}
+  //-           td
+  //-             if sub.canceled_at
+  //-               small.text-danger
+  //-                 | Cancelled on
+  //-                 = ' '
+  //-                 = moment.unix(sub.canceled_at).format('MMMM Q, YYYY')
+  //-             else
+  //-               small.text-info
+  //-                 | Next invoice:
+  //-                 = ' '
+  //-                 = moment.unix(sub.current_period_end).format('MMMM Q, YYYY')
+  //-           td= moment.unix(sub.created).format('MMMM Q, YYYY')
 
   hr.my-5
 
-  h5.mb-4 Signoffs
-  if customer.metadata.signoffs
-    table.table.table-sm.table-hover.table-responsive
-      thead
-        tr
-          th Equipment/Area
-          th Instructor
-          th Date
-      tbody
-        each signoff in customer.metadata.signoffs.split('\\n')
-          - var fields = signoff.split(',')
-          tr
-            td
-              strong= fields[0]
-            td= fields[1]
-            td
-              datetime= moment(fields[2]).format('MMMM Q, YYYY')
+  //- h5.mb-4 Signoffs
+  //- if customer.signoffs
+  //-   table.table.table-sm.table-hover.table-responsive
+  //-     thead
+  //-       tr
+  //-         th Equipment/Area
+  //-         th Instructor
+  //-         th Date
+  //-     tbody
+  //-       each signoff in customer.signoffs
+  //-         - var fields = signoff.split(',')
+  //-         tr
+  //-           td
+  //-             strong= fields[0]
+  //-           td= fields[1]
+  //-           td
+  //-             datetime= moment(fields[2]).format('MMMM Q, YYYY')
 
   hr.my-5
 
