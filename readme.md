@@ -31,16 +31,18 @@ npm run serve
 
 We use Stripe for most of our data storage and payment processing with a few exceptions. Below is an overview of all the main components and how everything fits together.
 
+---
+
 ## Membership
 
-#### Subscriptions
+### Subscriptions
 
 * Staff can add a Customer to a Subscription
 * Staff can change a Customer's Plan
 * Staff can cancel a Customer's Subscription
 * Customer can cancel their Subscriptions
 
-#### Emailing Customers
+### Emailing Customers
 
 * Staff can send emails to a given member or a list of members
 * Future: edit list of emails to send to
@@ -137,7 +139,7 @@ Metadata structure on Stripe:
 
 ---
 
-### Bookings & Resources
+## Bookings & Resources
 
 To allow members (eg `Customer`) to book equipment in the space we allow them to book a given tool (a `Resource`) for a date and time period.
 
@@ -156,16 +158,16 @@ In the initial version we won't set any limits to bookings.
 
 ---
 
-### Accounts
+## Accounts
 
-#### User Signup
+### User Signup
 
 * New Customer or Staff goes to a page to choose the plan they want
     * We only show Plans that are "public memberships"
 * They input their basic info, agree to terms/member agreement, set a password and add a credit card
     * If they are not already logged in, we log them in under this new account (eg they are Staff adding a new member)
 
-#### Login
+### Login
 
 We use Stripe to store all our login information so the login process for a Customer looks like:
 
@@ -176,7 +178,7 @@ We use Stripe to store all our login information so the login process for a Cust
         2. If it doesn't, let them know and prompt a password reset
     3. If multiple Customer's were found, use the most recent one. This isn't ideal but should work 95% of the time since most recent Customer is usually the "active" one anyways. We can always remove an old customer if this is an issue.
 
-#### Forgot Password
+### Forgot Password
 
 If a Customer forgets their password, they input their email address in a form and we send a temporary reset link:
 
@@ -189,9 +191,9 @@ If a Customer forgets their password, they input their email address in a form a
 
 ---
 
-### Access Control
+## Access Control
 
-#### Doorlock
+### Doorlock
 
 * Scans RFID cards
     * Lets member in if card belongs to an "active" Customer
@@ -201,7 +203,7 @@ If a Customer forgets their password, they input their email address in a form a
 * Fetches "active" Customers every 5-10 minutes, updates local list
 * Pushes Checkins every 10-30 minutes, clears local Checkins if success
 
-#### Checkins
+### Checkins
 
 * The Doorlock records Checkins when Customers come into the space
 * Staff can see Checkins for a Customer
@@ -212,7 +214,7 @@ If a Customer forgets their password, they input their email address in a form a
 
 ---
 
-### Pages
+## Pages
 
 ### Staff Dashboard
 
@@ -220,12 +222,12 @@ If a Customer forgets their password, they input their email address in a form a
 * View today's checkins
 * View Customrs who are "over using"
 
-#### Customer List
+### Customer List
 
 * Staff can search for members by name, email
 * Staff can filter by plan, interests, etc
 
-#### Customer Profile
+### Customer Profile
 
 * Customer can see all their Payments/Invoices, Subscriptions, Checkins, Bookings, etc
 * Customer can change their email, name or interests
