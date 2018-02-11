@@ -29,7 +29,7 @@ npm run serve
 
 ## Overview
 
-## We use Stripe for most of our data storage and payment processing with a few exceptions. Below is an overview of all the main components and how everything fits together.
+We use Stripe for most of our data storage and payment processing with a few exceptions. Below is an overview of all the main components and how everything fits together.
 
 ## Membership
 
