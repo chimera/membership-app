@@ -29,120 +29,22 @@ npm run serve
 
 ## Overview
 
-### Customer Signup
+## We use Stripe for most of our data storage and payment processing with a few exceptions. Below is an overview of all the main components and how everything fits together.
 
-* New Customer or Staff goes to a page to choose the plan they want
-    * We only show Plans that are "public memberships"
-* They input their basic info, agree to terms/member agreement, set a password and add a credit card
-    * If they are not already logged in, we log them in under this new account (eg they are Staff adding a new member)
+## Membership
 
-### Bookings & Resources
-
-To allow members (eg `Customer`) to book equipment in the space we allow them to book a given tool (a `Resource`) for a date and time period.
-
-A booking consists of:
-
-1. The Customer associated with the booking
-2. The Resource they are booking
-3. The date/time they want to book the resource for
-4. The time range they want to book for (15 minutes to 2 hours in 15 minute increments)
-
-When creating a booking it will fail if the given resource is already booked within the given time range, with a helpful message.
-
-We show a booking calendar to members and staff with a list of the booked equipment for any day.
-
-In the initial version we won't set any limits to bookings.
-
-### Checkins
-
-* The Doorlock records Checkins when Customers come into the space
-* Staff can see Checkins for a Customer
-* Customer can see their own Checkins
-* Staff can add/remove a Checkin for a Customer
-* Staff can view a Checkin calendar that shows total # of checkins for a day
-    * Clicking a day shows all Checkins for that day ordered latest at the top
-
-### Subscriptions
+#### Subscriptions
 
 * Staff can add a Customer to a Subscription
 * Staff can change a Customer's Plan
 * Staff can cancel a Customer's Subscription
 * Customer can cancel their Subscriptions
 
-### Customer List
-
-* Staff can search for members by name, email
-* Staff can filter by plan, interests, etc
-
-### Customer Profile
-
-* Customer can see all their Payments/Invoices, Subscriptions, Checkins, Bookings, etc
-* Customer can change their email, name or interests
-* Customer can change their credit card on file
-* Staff can manage all customer details
-
-### Emailing Customers
+#### Emailing Customers
 
 * Staff can send emails to a given member or a list of members
 * Future: edit list of emails to send to
 * Future: autocomplete of all Customer emails to add more
-
-### Authentication
-
-We use Stripe to store all our login information so the login process for a Customer looks like:
-
-1. Look up the email the submitted in the login form in the Customer `customer.email` field.
-    1. If no Customers with that email was found, show an error message
-    2. If one Customer was found with that email, check to see if their password matches `customer.metadata.password` (which is encrypted)
-        1. If it matches, log them in and set a cookie
-        2. If it doesn't, let them know and prompt a password reset
-    3. If multiple Customer's were found, use the most recent one. This isn't ideal but should work 95% of the time since most recent Customer is usually the "active" one anyways. We can always remove an old customer if this is an issue.
-
-#### Forgot Password
-
-If a Customer forgets their password, they input their email address in a form and we send a temporary reset link:
-
-1. When creating the reset link, we store a `metadata.resetToken = "somerandomstring"`
-2. When they click the link they go to `/reset-password?token=somerandomstring` where they are prompted to put in a new password
-3. Once submitted, we:
-    1. Set their new password to `metadata.password`
-    2. Remove their `metadata.resetToken` field
-    3. Log them in by setting a cookie
-
-### Day Passes
-
-We allow members to buy day passes or staff to add day passes to Customers. We do this by creating a Charge with the `metadata.daypass = true`.
-
-It is redeemed by setting `metadata.redeemedAt = timestamp` where the `timestamp` is a Unix Epoch of when the day pass was redeemed.
-
-Staff can optionally choose to not charge the Customer. We do this by setting the charge to `$0.00`. Staff can also unset `redeemedAt` to make the day pass available again.
-
-We redeem a day pass when someone records a new checking for a day during their Subscription where they have already used up all their alloted days (`plan.metadata.days`), pseudo code:
-
-```
-if customer.subscription.daysUsed gte plan.days
-  daypass.redeemedAt = unix epoch timestamp
-```
-
-### Staff Dashboard
-
-* Add a new Customer
-* View today's checkins
-* View Customrs who are "over using"
-
-### Doorlock
-
-* Scans RFID cards
-    * Lets member in if card belongs to an "active" Customer
-    * Rejects if they don't exist
-    * Show success/error message on a display by the door
-    * Records a local checking on every success
-* Fetches "active" Customers every 5-10 minutes, updates local list
-* Pushes Checkins every 10-30 minutes, clears local Checkins if success
-
-## Implementation Overview
-
-We use Stripe for most of our data storage and payment processing with a few exceptions. Below is an overview of all the main components and how everything fits together.
 
 ### Plans
 
@@ -186,6 +88,21 @@ The exceptions to this are:
 1. The customer is a "staff" member, or
 2. They are on an "unlimited" plan (which is indicated by the plan having the metadata of `unlimited = true`)
 
+### Day Passes
+
+We allow members to buy day passes or staff to add day passes to Customers. We do this by creating a Charge with the `metadata.daypass = true`.
+
+It is redeemed by setting `metadata.redeemedAt = timestamp` where the `timestamp` is a Unix Epoch of when the day pass was redeemed.
+
+Staff can optionally choose to not charge the Customer. We do this by setting the charge to `$0.00`. Staff can also unset `redeemedAt` to make the day pass available again.
+
+We redeem a day pass when someone records a new checking for a day during their Subscription where they have already used up all their alloted days (`plan.metadata.days`), pseudo code:
+
+```
+if customer.subscription.daysUsed gte plan.days
+  daypass.redeemedAt = unix epoch timestamp
+```
+
 ### Customer Information
 
 A customer is a Stripe Customer. They may have a `metadata.password` which would allow them to login to our application and do the following:
@@ -217,6 +134,101 @@ Metadata structure on Stripe:
   // password: 'asdf32hgdi2hoidoisfnwoierh23',
 }
 ```
+
+---
+
+### Bookings & Resources
+
+To allow members (eg `Customer`) to book equipment in the space we allow them to book a given tool (a `Resource`) for a date and time period.
+
+A booking consists of:
+
+1. The Customer associated with the booking
+2. The Resource they are booking
+3. The date/time they want to book the resource for
+4. The time range they want to book for (15 minutes to 2 hours in 15 minute increments)
+
+When creating a booking it will fail if the given resource is already booked within the given time range, with a helpful message.
+
+We show a booking calendar to members and staff with a list of the booked equipment for any day.
+
+In the initial version we won't set any limits to bookings.
+
+---
+
+### Accounts
+
+#### User Signup
+
+* New Customer or Staff goes to a page to choose the plan they want
+    * We only show Plans that are "public memberships"
+* They input their basic info, agree to terms/member agreement, set a password and add a credit card
+    * If they are not already logged in, we log them in under this new account (eg they are Staff adding a new member)
+
+#### Login
+
+We use Stripe to store all our login information so the login process for a Customer looks like:
+
+1. Look up the email the submitted in the login form in the Customer `customer.email` field.
+    1. If no Customers with that email was found, show an error message
+    2. If one Customer was found with that email, check to see if their password matches `customer.metadata.password` (which is encrypted)
+        1. If it matches, log them in and set a cookie
+        2. If it doesn't, let them know and prompt a password reset
+    3. If multiple Customer's were found, use the most recent one. This isn't ideal but should work 95% of the time since most recent Customer is usually the "active" one anyways. We can always remove an old customer if this is an issue.
+
+#### Forgot Password
+
+If a Customer forgets their password, they input their email address in a form and we send a temporary reset link:
+
+1. When creating the reset link, we store a `metadata.resetToken = "somerandomstring"`
+2. When they click the link they go to `/reset-password?token=somerandomstring` where they are prompted to put in a new password
+3. Once submitted, we:
+    1. Set their new password to `metadata.password`
+    2. Remove their `metadata.resetToken` field
+    3. Log them in by setting a cookie
+
+### Staff Dashboard
+
+* Add a new Customer
+* View today's checkins
+* View Customrs who are "over using"
+
+### Access Control
+
+#### Doorlock
+
+* Scans RFID cards
+    * Lets member in if card belongs to an "active" Customer
+    * Rejects if they don't exist
+    * Show success/error message on a display by the door
+    * Records a local checking on every success
+* Fetches "active" Customers every 5-10 minutes, updates local list
+* Pushes Checkins every 10-30 minutes, clears local Checkins if success
+
+#### Checkins
+
+* The Doorlock records Checkins when Customers come into the space
+* Staff can see Checkins for a Customer
+* Customer can see their own Checkins
+* Staff can add/remove a Checkin for a Customer
+* Staff can view a Checkin calendar that shows total # of checkins for a day
+    * Clicking a day shows all Checkins for that day ordered latest at the top
+
+---
+
+### Pages
+
+#### Customer List
+
+* Staff can search for members by name, email
+* Staff can filter by plan, interests, etc
+
+#### Customer Profile
+
+* Customer can see all their Payments/Invoices, Subscriptions, Checkins, Bookings, etc
+* Customer can change their email, name or interests
+* Customer can change their credit card on file
+* Staff can manage all customer details
 
 ## Credits
 
