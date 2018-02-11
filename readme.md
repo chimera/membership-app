@@ -187,11 +187,7 @@ If a Customer forgets their password, they input their email address in a form a
     2. Remove their `metadata.resetToken` field
     3. Log them in by setting a cookie
 
-### Staff Dashboard
-
-* Add a new Customer
-* View today's checkins
-* View Customrs who are "over using"
+---
 
 ### Access Control
 
@@ -217,6 +213,12 @@ If a Customer forgets their password, they input their email address in a form a
 ---
 
 ### Pages
+
+### Staff Dashboard
+
+* Add a new Customer
+* View today's checkins
+* View Customrs who are "over using"
 
 #### Customer List
 
